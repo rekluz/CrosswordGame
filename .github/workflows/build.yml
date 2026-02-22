@@ -33,3 +33,28 @@ jobs:
       - name: Accept licenses and install SDK packages
         run: |
           yes | sdkmanager --licenses > /dev/null 2>&1
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+
+      - name: Install Gradle 8.2 and generate wrapper
+        run: |
+          wget -q https://services.gradle.org/distributions/gradle-8.2-bin.zip -O gradle-8.2-bin.zip
+          unzip -q gradle-8.2-bin.zip -d $HOME
+          export PATH=$HOME/gradle-8.2/bin:$PATH
+          gradle wrapper --gradle-version=8.2 --distribution-type=bin
+          chmod +x gradlew
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CrosswordGame-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
