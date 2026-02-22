@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.CrosswordGame" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#1565C0</item>
+        <item name="colorPrimaryVariant">#003c8f</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#4FC3F7</item>
+        <item name="colorOnSecondary">#000000</item>
+        <item name="android:statusBarColor">#1A1A2E</item>
+    </style>
+</resources>
