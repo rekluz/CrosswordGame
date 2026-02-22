@@ -1,60 +1,39 @@
-name: Build APK
+ANDROID_HOME: /home/runner/android-sdk
+ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
-on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
+It is recommended to use ANDROID_HOME as other methods are deprecated
+	at com.android.build.gradle.internal.SdkLocator$SdkLocationSource$INJECTED_SDK_HOME.getSdkPathProperty(SdkLocator.kt:164)
+	at com.android.build.gradle.internal.SdkLocator$SdkLocationSource.getSdkLocation(SdkLocator.kt:169)
+	at com.android.build.gradle.internal.SdkLocator.getSdkLocation(SdkLocator.kt:221)
+	at com.android.build.gradle.internal.SdkDirectLoadingStrategy.loadSdkComponents(SdkDirectLoadingStrategy.kt:97)
+	at com.android.build.gradle.internal.SdkDirectLoadingStrategy.init(SdkDirectLoadingStrategy.kt:92)
+	at com.android.build.gradle.internal.SdkDirectLoadingStrategy.access$init(SdkDirectLoadingStrategy.kt:46)
+	at com.android.build.gradle.internal.SdkDirectLoadingStrategy$components$2.invoke(SdkDirectLoadingStrategy.kt:71)
+	at com.android.build.gradle.internal.SdkDirectLoadingStrategy$components$2.invoke(SdkDirectLoadingStrategy.kt:70)
+	at kotlin.SynchronizedLazyImpl.getValue(LazyJVM.kt:74)
+	at com.android.build.gradle.internal.SdkDirectLoadingStrategy.getComponents(SdkDirectLoadingStrategy.kt:70)
+	at com.android.build.gradle.internal.SdkDirectLoadingStrategy.loadedSuccessfully(SdkDirectLoadingStrategy.kt:178)
+	at com.android.build.gradle.internal.SdkLoadingStrategy.getTargetBootClasspath(SdkLoadingStrategy.kt:36)
+	at com.android.build.gradle.internal.SdkComponentsBuildService$VersionedSdkLoader$targetBootClasspathProvider$1.call(SdkComponents.kt:192)
+	at com.android.build.gradle.internal.SdkComponentsBuildService$VersionedSdkLoader$targetBootClasspathProvider$1.call(SdkComponents.kt:191)
+	at org.gradle.api.internal.provider.DefaultProvider.calculateOwnValue(DefaultProvider.java:72)
+	at org.gradle.api.internal.provider.AbstractMinimalProvider.calculateValue(AbstractMinimalProvider.java:108)
+	at org.gradle.api.internal.provider.FlatMapProvider.calculateOwnValue(FlatMapProvider.java:50)
+	at org.gradle.api.internal.provider.AbstractMinimalProvider.calculateValue(AbstractMinimalProvider.java:108)
+	at org.gradle.api.internal.provider.FlatMapProvider.backingProvider(FlatMapProvider.java:68)
+	at org.gradle.api.internal.provider.FlatMapProvider.getProducer(FlatMapProvider.java:77)
+	at org.gradle.api.internal.provider.Collectors$ElementsFromCollectionProvider.getProducer(Collectors.java:236)
+	at org.gradle.api.internal.provider.AbstractCollectionProperty$CollectingSupplier.getProducer(AbstractCollectionProperty.java:399)
+	at org.gradle.api.internal.provider.AbstractProperty.getProducer(AbstractProperty.java:187)
+	at org.gradle.api.internal.provider.Collectors$ElementsFromCollectionProvider.getProducer(Collectors.java:236)
+	at org.gradle.api.internal.provider.AbstractCollectionProperty$PlusCollector.getProducer(AbstractCollectionProperty.java:486)
+	at org.gradle.api.internal.provider.AbstractCollectionProperty$CollectingSupplier.getProducer(AbstractCollectionProperty.java:399)
+	at org.gradle.api.internal.provider.AbstractProperty.getProducer(AbstractProperty.java:187)
+	at org.gradle.api.internal.file.collections.ProviderBackedFileCollection.visitDependencies(ProviderBackedFileCollection.java:51)
+	at org.gradle.api.internal.tasks.CachingTaskDependencyResolveContext$TaskGraphImpl.getNodeValues(CachingTaskDependencyResolveContext.java:103)
+	at org.gradle.internal.graph.CachingDirectedGraphWalker$GraphWithEmptyEdges.getNodeValues(CachingDirectedGraphWalker.java:213)
+	at org.gradle.internal.graph.CachingDirectedGraphWalker.doSearch(CachingDirectedGraphWalker.java:121)
+	at org.gradle.internal.graph.CachingDirectedGraphWalker.findValues(CachingDirectedGraphWalker.java:73)
+	at org.gradle.api.internal.tasks.CachingTaskDependencyResolveContext.getDependencies(CachingTaskDependencyResolveContext.java:66)
+	... 142 more
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Install Android SDK
-        run: |
-          mkdir -p $HOME/android-sdk/cmdline-tools
-          cd $HOME/android-sdk/cmdline-tools
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
-          unzip -q cmdline-tools.zip
-          mv cmdline-tools latest
-          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
-          echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
-
-      - name: Accept licenses and install SDK packages
-        run: |
-          yes | sdkmanager --licenses > /dev/null 2>&1
-          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
-
-      - name: Install Gradle 8.2 and generate wrapper
-        run: |
-          wget -q https://services.gradle.org/distributions/gradle-8.2-bin.zip -O gradle-8.2-bin.zip
-          unzip -q gradle-8.2-bin.zip -d $HOME
-          export PATH=$HOME/gradle-8.2/bin:$PATH
-          gradle wrapper --gradle-version=8.2 --distribution-type=bin
-          chmod +x gradlew
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
-
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: CrosswordGame-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 30
