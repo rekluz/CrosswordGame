@@ -1,6 +1,7 @@
 # 🧩 Crossword Game - Android App
 
-A crossword puzzle game for Android inspired by Netflix Puzzled, built in Kotlin.
+A crossword puzzle game for Android inspired by Netflix Puzzled, built in Kotlin. This is a work in progress.
+The main structure is laid out but puzzles are not working properly. Experimental builds for now.
 
 ## Features
 - 10 levels of crossword puzzles (mixed topics)
