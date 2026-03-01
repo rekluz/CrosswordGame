@@ -47,4 +47,3 @@ CrosswordGame/
 │       └── drawable/                # Key background, icons
 ```
 
-## Adding More Levels
