@@ -46,4 +46,5 @@ CrosswordGame/
 │       ├── values/                  # Colors, strings, themes
 │       └── drawable/                # Key background, icons
 ```
+![Panda Crostic](https://github.com/user-attachments/assets/27bd32ff-03fc-4b44-9005-040085150b11)
 
