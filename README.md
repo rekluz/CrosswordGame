@@ -1,4 +1,4 @@
-# Crossword Game - Android App
+# Pandacrostic - Android App
 
 A crossword puzzle game for Android inspired by Netflix Puzzled, built in Kotlin. This is my very first attempt at creating an android app so it's very much a work in progress. 
 The main structure is laid out but puzzles are not working properly. Experimental builds for now.
@@ -46,5 +46,6 @@ CrosswordGame/
 │       ├── values/                  # Colors, strings, themes
 │       └── drawable/                # Key background, icons
 ```
-![Panda Crostic](https://github.com/user-attachments/assets/27bd32ff-03fc-4b44-9005-040085150b11)
+
+<img src="[https://user-images.githubusercontent.com" width](https://github.com/user-attachments/assets/27bd32ff-03fc-4b44-9005-040085150b11)="200" height="150" />
 
